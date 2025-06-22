@@ -12,16 +12,16 @@ import { GoogleTrendsSection } from "@/components/google-trends-section"
 import Link from "next/link"
 
 const ROTATING_SUGGESTIONS = [
-  "digital marketing strategies",
-  "SEO optimization techniques",
-  "content marketing trends",
-  "social media engagement",
-  "email marketing campaigns",
-  "brand awareness tactics",
-  "conversion rate optimization",
-  "influencer marketing",
-  "video marketing strategies",
-  "mobile marketing trends",
+"best paneer recipes for dinner",
+"healthy yogurt brands for weight loss",
+"iphone 15 deals near me",
+"top running shoes for flat feet",
+"car wash offers in Bangalore",
+"natural skincare routine for glowing skin",
+"home gym equipment under 10000",
+"easy meal kits for busy professionals",
+"electric scooters for city commute",
+"best specialty coffee brands in India"
 ]
 
 export default function HomePage() {
