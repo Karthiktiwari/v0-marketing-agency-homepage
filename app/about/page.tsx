@@ -90,7 +90,7 @@ export default function AboutPage() {
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3">
                       <Badge variant="secondary">AI/ML</Badge>
-                      <span className="text-gray-700">Google ADK & Gemini LLMs</span>
+                      <span className="text-gray-700">Google ADK & Gemini Agents, Imagen, Veo and LLMs</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <Badge variant="secondary">Frontend</Badge>
@@ -102,7 +102,7 @@ export default function AboutPage() {
                     </div>
                     <div className="flex items-center space-x-3">
                       <Badge variant="secondary">APIs</Badge>
-                      <span className="text-gray-700">Google Trends, Search APIs</span>
+                      <span className="text-gray-700">Google Trends, Google Programmable Search APIs, Bigquery, Google Keyword Planner</span>
                     </div>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ export default function AboutPage() {
                   <h3 className="font-semibold text-lg">Professional Links</h3>
                   <div className="space-y-3">
                     <a
-                      href="https://github.com/yourusername"
+                      href="https://github.com/karthiktiwari"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors"
@@ -191,7 +191,7 @@ export default function AboutPage() {
                       <ExternalLink className="h-4 w-4 text-gray-400 ml-auto" />
                     </a>
                     <a
-                      href="https://linkedin.com/in/yourprofile"
+                      href="https://linkedin.com/in/karthiktiwari"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors"
@@ -201,7 +201,7 @@ export default function AboutPage() {
                       <ExternalLink className="h-4 w-4 text-gray-400 ml-auto" />
                     </a>
                     <a
-                      href="mailto:your.email@example.com"
+                      href="mailto:karthiktiwari0512@gmail.com"
                       className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors"
                     >
                       <Mail className="h-5 w-5 text-green-600" />
