@@ -1,0 +1,323 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Ensure full height layout for sticky footer */
+html,
+body {
+  height: 100%;
+}
+
+#__next {
+  height: 100%;
+}
+
+/* Custom styles for Google Trends embeds */
+.trends-embed-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom font for headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+}
+
+/* Prose styling for generated content */
+.prose {
+  max-width: none;
+}
+
+.prose h1 {
+  @apply text-2xl font-bold text-gray-900 mb-4;
+}
+
+.prose h2 {
+  @apply text-xl font-semibold text-gray-800 mb-3 mt-6;
+}
+
+.prose h3 {
+  @apply text-lg font-medium text-gray-800 mb-2 mt-4;
+}
+
+.prose p {
+  @apply text-gray-700 mb-4 leading-relaxed;
+}
+
+.prose ul {
+  @apply list-disc list-inside mb-4 space-y-1;
+}
+
+.prose li {
+  @apply text-gray-700;
+}
+
+/* Loading animations */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Google Trends embed styling */
+#trends-timeseries iframe,
+#trends-geomap iframe,
+#google-trends-related-queries iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 0.5rem;
+}
+
+/* Ensure proper container sizing */
+.trends-widget-container {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+/* Loading state improvements */
+.trends-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+/* Responsive adjustments for trends widgets */
+@media (max-width: 768px) {
+  #trends-timeseries,
+  #trends-geomap,
+  #google-trends-related-queries {
+    min-height: 250px;
+  }
+}
+
+/* Custom styles for rendered HTML content */
+.prose-purple h1,
+.prose-purple h2,
+.prose-purple h3 {
+  @apply text-purple-900 font-bold;
+}
+
+.prose-purple h1 {
+  @apply text-2xl mb-4;
+}
+
+.prose-purple h2 {
+  @apply text-xl mb-3 mt-6;
+}
+
+.prose-purple h3 {
+  @apply text-lg mb-2 mt-4;
+}
+
+.prose-purple p {
+  @apply text-gray-700 mb-4 leading-relaxed;
+}
+
+.prose-purple ul {
+  @apply list-disc list-inside mb-4 space-y-2 ml-4;
+}
+
+.prose-purple li {
+  @apply text-gray-700;
+}
+
+.prose-purple strong,
+.prose-purple b {
+  @apply font-semibold text-gray-900;
+}
+
+/* Green prose for content generation */
+.prose-green h1,
+.prose-green h2,
+.prose-green h3 {
+  @apply text-green-900 font-bold;
+}
+
+.prose-green h1 {
+  @apply text-2xl mb-4;
+}
+
+.prose-green h2 {
+  @apply text-xl mb-3 mt-6;
+}
+
+.prose-green h3 {
+  @apply text-lg mb-2 mt-4;
+}
+
+.prose-green p {
+  @apply text-gray-700 mb-4 leading-relaxed;
+}
+
+.prose-green ul {
+  @apply list-disc list-inside mb-4 space-y-2 ml-4;
+}
+
+.prose-green li {
+  @apply text-gray-700;
+}
+
+.prose-green strong,
+.prose-green b {
+  @apply font-semibold text-gray-900;
+}
+
+/* Summary specific styles */
+.summary h3 {
+  @apply text-lg font-semibold text-purple-900 mb-3 mt-4;
+}
+
+.summary ul {
+  @apply list-disc list-inside mb-4 space-y-2 ml-4;
+}
+
+.summary li {
+  @apply text-gray-700 leading-relaxed;
+}
+
+/* Blog and caption content styles */
+.blog-content h1 {
+  @apply text-2xl font-bold text-green-900 mb-4;
+}
+
+.blog-content h2 {
+  @apply text-xl font-semibold text-green-800 mb-3 mt-6;
+}
+
+.blog-content h3 {
+  @apply text-lg font-medium text-green-800 mb-2 mt-4;
+}
+
+.blog-content p {
+  @apply text-gray-700 mb-4 leading-relaxed;
+}
+
+.caption-content p {
+  @apply text-gray-700 mb-3 leading-relaxed;
+}
+
+.caption-content ul {
+  @apply list-disc list-inside mb-4 space-y-1 ml-4;
+}
+
+.caption-content li {
+  @apply text-gray-700;
+}
+
+.caption-content strong {
+  @apply font-semibold text-green-700;
+}
+
+/* Content container backgrounds */
+.content-display {
+  background: linear-gradient(135deg, #fefefe 0%, #f9fafb 100%);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
