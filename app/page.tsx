@@ -9,49 +9,50 @@ import { QueriesSection } from "@/components/queries-section"
 import { ContentAnalysisSection } from "@/components/content-analysis-section"
 import { ContentGenerationSection } from "@/components/content-generation-section"
 import { GoogleTrendsSection } from "@/components/google-trends-section"
+import { FloatingProgress } from "@/components/floating-progress"
 import Link from "next/link"
 
 const ROTATING_SUGGESTIONS = [
-"best paneer recipes for dinner",
-"healthy yogurt brands for weight loss",
-"iphone 15 deals near me",
-"top running shoes for flat feet",
-"car wash offers in Bangalore",
-"natural skincare routine for glowing skin",
-"home gym equipment under 10000",
-"easy meal kits for busy professionals",
-"electric scooters for city commute",
-"best specialty coffee brands in India",
-"best budget laptops for students",
-"low calorie snacks for office",
-"smart TVs under 30000",
-"top rated dentists in Mumbai",
-"air purifiers for Delhi pollution",
-"affordable yoga mats with grip",
-"weekend getaways from Hyderabad",
-"organic baby food brands in India",
-"quiet cafes with wifi in Bangalore",
-"best waterproof bluetooth speakers",
-"summer dresses under 2000",
-"portable ACs for small rooms",
-"top MBA colleges in India 2025",
-"best hair oils for dandruff",
-"new Netflix releases this week",
-"budget-friendly pet supplies online",
-"easy recipes with oats",
-"most fuel efficient cars in India",
-"best mutual funds to invest in 2025",
-"stylish office wear for women",
-"cheap flight tickets to Goa",
-"best DSLR cameras for beginners",
-"high protein vegetarian snacks",
-"reliable movers and packers in Pune",
-"best books for personal growth",
-"free coding bootcamps online",
-"popular learning apps for kids",
-"latest smartwatches under 5000",
-"budget makeup kits for beginners",
-"fast charging power banks in India"
+  "best paneer recipes for dinner",
+  "healthy yogurt brands for weight loss",
+  "iphone 15 deals near me",
+  "top running shoes for flat feet",
+  "car wash offers in Bangalore",
+  "natural skincare routine for glowing skin",
+  "home gym equipment under 10000",
+  "easy meal kits for busy professionals",
+  "electric scooters for city commute",
+  "best specialty coffee brands in India",
+  "best budget laptops for students",
+  "low calorie snacks for office",
+  "smart TVs under 30000",
+  "top rated dentists in Mumbai",
+  "air purifiers for Delhi pollution",
+  "affordable yoga mats with grip",
+  "weekend getaways from Hyderabad",
+  "organic baby food brands in India",
+  "quiet cafes with wifi in Bangalore",
+  "best waterproof bluetooth speakers",
+  "summer dresses under 2000",
+  "portable ACs for small rooms",
+  "top MBA colleges in India 2025",
+  "best hair oils for dandruff",
+  "new Netflix releases this week",
+  "budget-friendly pet supplies online",
+  "easy recipes with oats",
+  "most fuel efficient cars in India",
+  "best mutual funds to invest in 2025",
+  "stylish office wear for women",
+  "cheap flight tickets to Goa",
+  "best DSLR cameras for beginners",
+  "high protein vegetarian snacks",
+  "reliable movers and packers in Pune",
+  "best books for personal growth",
+  "free coding bootcamps online",
+  "popular learning apps for kids",
+  "latest smartwatches under 5000",
+  "budget makeup kits for beginners",
+  "fast charging power banks in India",
 ]
 
 export default function HomePage() {
@@ -61,6 +62,7 @@ export default function HomePage() {
   const [relatedQueries, setRelatedQueries] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0)
+  const [showAmplifyBanner, setShowAmplifyBanner] = useState(false)
 
   // Rotate suggestions every 3 seconds
   useEffect(() => {
@@ -75,6 +77,7 @@ export default function HomePage() {
     if (!searchTerm.trim()) return
 
     setIsLoading(true)
+    setShowAmplifyBanner(false)
     const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     setSessionId(newSessionId)
 
@@ -93,6 +96,18 @@ export default function HomePage() {
         const data = await response.json()
         setRelatedQueries(data.relatedQueries || [])
         setCurrentStep(1)
+
+        // Show success banner
+        setShowAmplifyBanner(true)
+        setTimeout(() => {
+          const queriesSection = document.getElementById("queries-section")
+          if (queriesSection) {
+            queriesSection.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
+        }, 100)
+
+        // Hide banner after 3 seconds
+        setTimeout(() => setShowAmplifyBanner(false), 3000)
       }
     } catch (error) {
       console.error("Error generating queries:", error)
@@ -105,6 +120,18 @@ export default function HomePage() {
         `${searchTerm} tools and techniques`,
       ])
       setCurrentStep(1)
+
+      // Show success banner even for mock data
+      setShowAmplifyBanner(true)
+      setTimeout(() => {
+        const queriesSection = document.getElementById("queries-section")
+        if (queriesSection) {
+          queriesSection.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      }, 100)
+
+      // Hide banner after 3 seconds
+      setTimeout(() => setShowAmplifyBanner(false), 3000)
     } finally {
       setIsLoading(false)
     }
@@ -123,6 +150,19 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
+      {/* Floating Progress Bar */}
+      <FloatingProgress currentStep={currentStep} isLoading={isLoading} searchTerm={searchTerm} />
+
+      {/* Success Banners */}
+      {showAmplifyBanner && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
+          <div className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+            <TrendingUp className="h-5 w-5" />
+            <span className="font-medium">Queries generated successfully! 🚀</span>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -207,7 +247,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Progress Steps */}
+            {/* Progress Steps - Only show when not scrolled */}
             {currentStep > 0 && (
               <div className="flex justify-center items-center space-x-4 mb-12">
                 {steps.map((step, index) => {
@@ -245,20 +285,22 @@ export default function HomePage() {
           {currentStep >= 1 && (
             <div className="space-y-12">
               {/* Queries Section */}
-              <QueriesSection
-                searchTerm={searchTerm}
-                relatedQueries={relatedQueries}
-                onNext={() => {
-                  setCurrentStep(2)
-                  // Auto-scroll to content analysis section
-                  setTimeout(() => {
-                    const element = document.getElementById("content-analysis-section")
-                    if (element) {
-                      element.scrollIntoView({ behavior: "smooth", block: "start" })
-                    }
-                  }, 100)
-                }}
-              />
+              <div id="queries-section">
+                <QueriesSection
+                  searchTerm={searchTerm}
+                  relatedQueries={relatedQueries}
+                  onNext={() => {
+                    setCurrentStep(2)
+                    // Auto-scroll to content analysis section
+                    setTimeout(() => {
+                      const element = document.getElementById("content-analysis-section")
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth", block: "start" })
+                      }
+                    }, 100)
+                  }}
+                />
+              </div>
 
               {currentStep >= 2 && (
                 <div id="content-analysis-section">

@@ -14,7 +14,7 @@ interface ContentGenerationSectionProps {
 
 // Function to clean HTML content by removing markdown code block markers
 const cleanHtmlContent = (content: string): string => {
-  // Remove ```html at the beginning and ``` at the end
+  // Remove \`\`\`html at the beginning and \`\`\` at the end
   return content
     .replace(/^```html\s*/, "")
     .replace(/\s*```$/, "")
@@ -26,9 +26,11 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
   const [generatedContent, setGeneratedContent] = useState<string | null>(null)
   const [contentType, setContentType] = useState<"blog" | "caption">("blog")
   const [bannerType, setBannerType] = useState<"blog" | "social">("blog")
+  const [showSuccessBanner, setShowSuccessBanner] = useState(false)
 
   const handleGenerateContent = async () => {
     setIsGenerating(true)
+    setShowSuccessBanner(false)
 
     try {
       const response = await fetch("https://amplify-test-1002947097936.asia-south2.run.app/generate", {
@@ -42,10 +44,21 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
 
       if (response.ok) {
         const data = await response.json()
-        // Handle both possible response formats and clean HTML markers
         const rawContent = data.generatedContent || data.content || data
         const cleanedContent = typeof rawContent === "string" ? cleanHtmlContent(rawContent) : rawContent
         setGeneratedContent(cleanedContent)
+
+        // Show success banner and scroll to generated content
+        setShowSuccessBanner(true)
+        setTimeout(() => {
+          const generatedContentElement = document.getElementById("generated-content-display")
+          if (generatedContentElement) {
+            generatedContentElement.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
+        }, 100)
+
+        // Hide banner after 3 seconds
+        setTimeout(() => setShowSuccessBanner(false), 3000)
       } else {
         // Mock content for demo
         const mockContent =
@@ -89,6 +102,18 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
             </div>`
 
         setGeneratedContent(mockContent)
+
+        // Show success banner and scroll to generated content
+        setShowSuccessBanner(true)
+        setTimeout(() => {
+          const generatedContentElement = document.getElementById("generated-content-display")
+          if (generatedContentElement) {
+            generatedContentElement.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
+        }, 100)
+
+        // Hide banner after 3 seconds
+        setTimeout(() => setShowSuccessBanner(false), 3000)
       }
     } catch (error) {
       console.error("Error generating content:", error)
@@ -116,6 +141,14 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
 
   return (
     <section className="space-y-8">
+      {showSuccessBanner && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
+          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+            <Sparkles className="h-5 w-5" />
+            <span className="font-medium">Content generated successfully! 🎉</span>
+          </div>
+        </div>
+      )}
       <div className="text-center">
         <h3 className="text-3xl font-bold text-gray-900 mb-4">Generate Content & Media</h3>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -182,7 +215,7 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
               </div>
 
               {generatedContent && (
-                <div className="space-y-4">
+                <div id="generated-content-display" className="space-y-4">
                   <div className="bg-white rounded-lg p-6 border shadow-sm max-h-96 overflow-y-auto">
                     <div
                       className="prose prose-green max-w-none"

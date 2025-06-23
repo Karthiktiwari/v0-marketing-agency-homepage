@@ -14,7 +14,7 @@ interface ContentAnalysisSectionProps {
 
 // Function to clean HTML content by removing markdown code block markers
 const cleanHtmlContent = (content: string): string => {
-  // Remove ```html at the beginning and ``` at the end
+  // Remove \`\`\`html at the beginning and \`\`\` at the end
   return content
     .replace(/^```html\s*/, "")
     .replace(/\s*```$/, "")
@@ -25,9 +25,11 @@ export function ContentAnalysisSection({ sessionId, queries, onNext }: ContentAn
   const [isLoading, setIsLoading] = useState(false)
   const [analysisData, setAnalysisData] = useState<string | null>(null)
   const [showAnalysis, setShowAnalysis] = useState(false)
+  const [showSuccessBanner, setShowSuccessBanner] = useState(false)
 
   const handleAnalyze = async () => {
     setIsLoading(true)
+    setShowSuccessBanner(false)
 
     try {
       const response = await fetch("https://amplify-test-1002947097936.asia-south2.run.app/summarize", {
@@ -81,6 +83,18 @@ export function ContentAnalysisSection({ sessionId, queries, onNext }: ContentAn
       `)
       }
       setShowAnalysis(true)
+
+      // Show success banner and scroll to analysis
+      setShowSuccessBanner(true)
+      setTimeout(() => {
+        const analysisElement = document.getElementById("analysis-content-display")
+        if (analysisElement) {
+          analysisElement.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      }, 100)
+
+      // Hide banner after 3 seconds
+      setTimeout(() => setShowSuccessBanner(false), 3000)
     } catch (error) {
       console.error("Error analyzing content:", error)
     } finally {
@@ -90,6 +104,14 @@ export function ContentAnalysisSection({ sessionId, queries, onNext }: ContentAn
 
   return (
     <section className="space-y-8">
+      {showSuccessBanner && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
+          <div className="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+            <Eye className="h-5 w-5" />
+            <span className="font-medium">Analysis completed successfully! 📊</span>
+          </div>
+        </div>
+      )}
       <div className="text-center">
         <h3 className="text-3xl font-bold text-gray-900 mb-4">Trending Search Content Analysis</h3>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -155,7 +177,7 @@ export function ContentAnalysisSection({ sessionId, queries, onNext }: ContentAn
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="bg-white rounded-lg p-6 border shadow-sm">
+              <div id="analysis-content-display" className="bg-white rounded-lg p-6 border shadow-sm">
                 <div
                   className="prose prose-purple max-w-none"
                   dangerouslySetInnerHTML={{ __html: analysisData || "" }}

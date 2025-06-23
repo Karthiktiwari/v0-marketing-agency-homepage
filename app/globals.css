@@ -68,14 +68,6 @@ body {
   height: 100%;
 }
 
-/* Custom styles for Google Trends embeds */
-.trends-embed-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
@@ -160,22 +152,45 @@ h6 {
   @apply bg-gray-400;
 }
 
-/* Google Trends embed styling */
-#trends-timeseries iframe,
-#trends-geomap iframe,
-#google-trends-related-queries iframe {
+/* Google Trends widget containment */
+.trends-widget-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+}
+
+.trends-widget-container iframe {
   width: 100% !important;
   height: 100% !important;
   border: none !important;
   border-radius: 0.5rem;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
-/* Ensure proper container sizing */
-.trends-widget-container {
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
-  border-radius: 0.5rem;
+/* Force Google Trends widgets to stay within bounds */
+.trends-widget-container > div {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.trends-widget-container > div > div {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Prevent Google Trends from breaking layout */
+.trends-widget-container * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 /* Loading state improvements */
@@ -190,9 +205,7 @@ h6 {
 
 /* Responsive adjustments for trends widgets */
 @media (max-width: 768px) {
-  #trends-timeseries,
-  #trends-geomap,
-  #google-trends-related-queries {
+  .trends-widget-container {
     min-height: 250px;
   }
 }
@@ -320,4 +333,81 @@ h6 {
   background: linear-gradient(135deg, #fefefe 0%, #f9fafb 100%);
   border: 1px solid #e5e7eb;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Success banner animations */
+@keyframes slide-in-from-top {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-top {
+  animation-name: slide-in-from-top;
+}
+
+.duration-300 {
+  animation-duration: 300ms;
+}
+
+/* Success banner styling */
+.success-banner {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  animation: slide-in-from-top 300ms ease-out;
+}
+
+.success-banner.purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+/* Ensure banners appear above everything */
+.success-banner {
+  z-index: 9999;
+}
+
+/* Mobile responsive banner */
+@media (max-width: 768px) {
+  .success-banner {
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+    max-width: calc(100vw - 2rem);
+  }
+}
+
+/* Floating progress bar styles */
+.floating-progress {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Ensure floating elements don't interfere with content */
+.floating-progress {
+  pointer-events: auto;
+}
+
+.floating-progress > * {
+  pointer-events: auto;
 }
