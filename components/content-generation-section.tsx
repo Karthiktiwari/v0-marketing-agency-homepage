@@ -44,7 +44,7 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
 
     try {
       // Call backend directly
-      const response = await fetch("https://amplify-test-1002947097936.asia-south2.run.app/generate-image", {
+      const response = await fetch("https://amplify-demo-1002947097936.asia-south2.run.app/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -96,7 +96,7 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
     setShowSuccessBanner(false)
 
     try {
-      const response = await fetch("https://amplify-test-1002947097936.asia-south2.run.app/generate", {
+      const response = await fetch("https://amplify-demo-1002947097936.asia-south2.run.app/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

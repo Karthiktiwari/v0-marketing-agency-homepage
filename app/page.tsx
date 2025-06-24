@@ -83,7 +83,7 @@ export default function HomePage() {
 
     try {
       // Call the real API endpoint
-      const response = await fetch("https://amplify-test-1002947097936.asia-south2.run.app/query", {
+      const response = await fetch("https://amplify-demo-1002947097936.asia-south2.run.app/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
