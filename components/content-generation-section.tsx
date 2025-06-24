@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileText, ImageIcon, Video, Download, Loader2, Sparkles } from "lucide-react"
+import { FileText, ImageIcon, Video, Download, Loader2, Sparkles, AlertTriangle } from "lucide-react"
 
 interface ContentGenerationSectionProps {
   sessionId: string
@@ -25,8 +25,71 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedContent, setGeneratedContent] = useState<string | null>(null)
   const [contentType, setContentType] = useState<"blog" | "caption">("blog")
-  const [bannerType, setBannerType] = useState<"blog" | "social">("blog")
   const [showSuccessBanner, setShowSuccessBanner] = useState(false)
+
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null)
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false)
+  const [imageType, setImageType] = useState<
+    "blog-banner" | "social-media-post" | "social-media-story" | "linkedin-post"
+  >("blog-banner")
+
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  /* ---- IMAGE GENERATION HANDLER (direct backend call) ---- */
+  const handleGenerateImage = async () => {
+    setIsGeneratingImage(true)
+    setGeneratedImage(null)
+    setShowSuccessBanner(false)
+    setErrorMsg(null)
+
+    try {
+      // Call backend directly
+      const response = await fetch("https://amplify-test-1002947097936.asia-south2.run.app/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imageType,
+          sessionId,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(errorText || `HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setGeneratedImage(data.base64Image)
+
+      // Show success banner and scroll to generated image
+      setShowSuccessBanner(true)
+      setTimeout(() => {
+        const generatedImageElement = document.getElementById("generated-image-display")
+        if (generatedImageElement) {
+          generatedImageElement.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      }, 100)
+
+      // Hide banner after 3 seconds
+      setTimeout(() => setShowSuccessBanner(false), 3000)
+    } catch (error: any) {
+      console.error("Error generating image:", error)
+      setErrorMsg(error.message || "Failed to generate image")
+    } finally {
+      setIsGeneratingImage(false)
+    }
+  }
+
+  const handleDownloadImage = () => {
+    if (!generatedImage) return
+
+    const link = document.createElement("a")
+    link.href = `data:image/png;base64,${generatedImage}`
+    link.download = `${imageType}-${Date.now()}.png`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   const handleGenerateContent = async () => {
     setIsGenerating(true)
@@ -145,7 +208,9 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
         <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
           <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
             <Sparkles className="h-5 w-5" />
-            <span className="font-medium">Content generated successfully! 🎉</span>
+            <span className="font-medium">
+              {generatedImage ? "Image generated successfully! 🎨" : "Content generated successfully! 🎉"}
+            </span>
           </div>
         </div>
       )}
@@ -240,24 +305,85 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
 
             <TabsContent value="banner" className="space-y-6">
               <div className="flex items-center space-x-4">
-                <Select value={bannerType} onValueChange={(value: "blog" | "social") => setBannerType(value)}>
+                <Select
+                  value={imageType}
+                  onValueChange={(
+                    value: "blog-banner" | "social-media-post" | "social-media-story" | "linkedin-post",
+                  ) => setImageType(value)}
+                >
                   <SelectTrigger className="w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="blog">Blog Banner</SelectItem>
-                    <SelectItem value="social">Social Media</SelectItem>
+                    <SelectItem value="blog-banner">Blog Banner</SelectItem>
+                    <SelectItem value="social-media-post">Social Media Post</SelectItem>
+                    <SelectItem value="social-media-story">Social Media Story</SelectItem>
+                    <SelectItem value="linkedin-post">LinkedIn Post</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button className="bg-green-600 hover:bg-green-700">
-                  <ImageIcon className="h-4 w-4 mr-2" />
-                  Generate Banner
+                <Button
+                  onClick={handleGenerateImage}
+                  disabled={isGeneratingImage}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  {isGeneratingImage ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <ImageIcon className="h-4 w-4 mr-2" />
+                      Generate{" "}
+                      {imageType
+                        .split("-")
+                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(" ")}
+                    </>
+                  )}
                 </Button>
               </div>
-              <div className="bg-white rounded-lg p-12 border border-dashed border-gray-300 text-center">
-                <ImageIcon className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-500">Banner generation will appear here</p>
-              </div>
+
+              {errorMsg && (
+                <div className="flex items-center space-x-2 text-red-600 text-sm">
+                  <AlertTriangle className="h-4 w-4" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+
+              {generatedImage ? (
+                <div id="generated-image-display" className="space-y-4">
+                  <div className="bg-white rounded-lg p-6 border shadow-sm">
+                    <img
+                      src={`data:image/png;base64,${generatedImage}`}
+                      alt={`Generated ${imageType}`}
+                      className="w-full h-auto rounded-lg border"
+                      style={{
+                        maxHeight: imageType === "social-media-story" ? "600px" : "400px",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <Button onClick={handleDownloadImage} variant="outline">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Image
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white rounded-lg p-12 border border-dashed border-gray-300 text-center">
+                  <ImageIcon className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-500">
+                    {isGeneratingImage
+                      ? "Generating your image..."
+                      : `Generate a ${imageType
+                          .split("-")
+                          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join(" ")} to see it here`}
+                  </p>
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="video" className="space-y-6">
