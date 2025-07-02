@@ -359,7 +359,7 @@ export function ContentGenerationSection({ sessionId }: ContentGenerationSection
                       alt={`Generated ${imageType}`}
                       className="w-full h-auto rounded-lg border"
                       style={{
-                        maxHeight: imageType === "social-media-story" ? "600px" : "400px",
+                        maxHeight: "600px", // Same max height for all image types
                         objectFit: "contain",
                       }}
                     />
